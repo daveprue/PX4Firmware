@@ -6,6 +6,7 @@ SRCS		= adc.c \
 		  safety.c \
 		  ../../lib/rc/sbus.c \
 		  ../../lib/rc/dsm.c \
+		  ../../lib/rc/xbus.c \
 		  ../systemlib/up_cxxinitialize.c \
 		  ../systemlib/perf_counter.c \
 		  mixer.cpp \

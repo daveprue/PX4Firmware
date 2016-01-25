@@ -243,7 +243,7 @@ public:
 	};
 #endif
 
-	inline uint16_t		system_status() const {return _status;}
+	inline uint32_t		system_status() const {return _status;}
 
 private:
 	device::Device		*_interface;
@@ -271,7 +271,7 @@ private:
 	perf_counter_t		_perf_sample_latency;	///< total system latency (based on passed-through timestamp)
 
 	/* cached IO state */
-	uint16_t		_status;		///< Various IO status flags
+	uint32_t		_status;		///< Various IO status flags
 	uint16_t		_alarms;		///< Various IO alarms
 
 	/* subscribed topics */
@@ -1801,6 +1801,9 @@ PX4IO::io_publish_raw_rc()
 	} else if (_status & PX4IO_P_STATUS_FLAGS_RC_SBUS) {
 		rc_val.input_source = input_rc_s::RC_INPUT_SOURCE_PX4IO_SBUS;
 
+    }    else if (_status & PX4IO_P_STATUS_FLAGS_RC_XBUS) {
+            rc_val.input_source = input_rc_s::RC_INPUT_SOURCE_PX4IO_XBUS;
+
 	} else if (_status & PX4IO_P_STATUS_FLAGS_RC_ST24) {
 		rc_val.input_source = input_rc_s::RC_INPUT_SOURCE_PX4IO_ST24;
 
@@ -2143,6 +2146,7 @@ PX4IO::print_status(bool extended_status)
 	       ((flags & PX4IO_P_STATUS_FLAGS_RC_DSM)   ? " DSM" : ""),
 	       ((flags & PX4IO_P_STATUS_FLAGS_RC_ST24)   ? " ST24" : ""),
 	       ((flags & PX4IO_P_STATUS_FLAGS_RC_SBUS)  ? " SBUS" : ""),
+           ((flags & PX4IO_P_STATUS_FLAGS_RC_XBUS)  ? " XBUS" : ""),
 	       ((flags & PX4IO_P_STATUS_FLAGS_FMU_OK)   ? " FMU_OK" : " FMU_FAIL"),
 	       ((flags & PX4IO_P_STATUS_FLAGS_RAW_PWM)  ? " RAW_PWM_PASSTHROUGH" : ""),
 	       ((flags & PX4IO_P_STATUS_FLAGS_MIXER_OK) ? " MIXER_OK" : " MIXER_FAIL"),
@@ -2725,6 +2729,9 @@ PX4IO::ioctl(file * filep, int cmd, unsigned long arg)
 
 			} else if (status & PX4IO_P_STATUS_FLAGS_RC_SBUS) {
 				rc_val->input_source = input_rc_s::RC_INPUT_SOURCE_PX4IO_SBUS;
+
+            } else if (status & PX4IO_P_STATUS_FLAGS_RC_XBUS) {
+                rc_val->input_source = input_rc_s::RC_INPUT_SOURCE_PX4IO_XBUS;
 
 			} else if (status & PX4IO_P_STATUS_FLAGS_RC_ST24) {
 				rc_val->input_source = input_rc_s::RC_INPUT_SOURCE_PX4IO_ST24;
